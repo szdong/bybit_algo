@@ -203,6 +203,7 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
         except Exception as e:
             error_msg = f"Error: {e}\n{traceback.format_exc()}"
             logger.print_log(text=error_msg)
+            notify.line_notify(message=msg)
 
         time.sleep(param.sleep_time)
 
