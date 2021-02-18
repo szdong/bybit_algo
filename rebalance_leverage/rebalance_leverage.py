@@ -196,8 +196,8 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
             real_leverage = position / (balance * ticker.last)
 
             # Record account and position information.
-            msg = f"Price: {ticker.last} USD | " + f"Position: {position} USD | " \
-                  + f"Balance: {balance} {base_currency} | " + f"Effective Leverage: {real_leverage} x"
+            msg = f"Price: {ticker.last} | " + f"Position: {position} USD | " + f"Balance: {balance} {base_currency} | " \
+                  + f"Effective Leverage: {round(real_leverage, 3)}x"
             logger.print_log(text=msg)
 
         except Exception as e:
