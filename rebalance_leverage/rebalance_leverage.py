@@ -120,11 +120,11 @@ def cancel_info(cancel_info: dict, logger: CustomLog):
 
 def order_info(order_info: dict, logger: CustomLog):
     if order_info['info']['side'] == "Buy":
-        msg = f"[New Buy Order]  id: {order_info['info']['clOrdID']}, symbol: {order_info['info']['symbol']}, type: {order_info['info']['order_type']}, side: {order_info['info']['side']}, amount: {order_info['info']['qty']}"
+        msg = f"[New Buy Order]  id: {order_info['info']['order_id']}, symbol: {order_info['info']['symbol']}, type: {order_info['info']['order_type']}, side: {order_info['info']['side']}, amount: {order_info['info']['qty']}"
         logger.print_log(text=msg)
         return msg
     elif order_info['info']['side'] == "Sell":
-        msg = f"[New Sell Order] id: {order_info['info']['clOrdID']}, symbol: {order_info['info']['symbol']}, type: {order_info['info']['order_type']}, side: {order_info['info']['side']}, amount: {order_info['info']['qty']}"
+        msg = f"[New Sell Order] id: {order_info['info']['order_id']}, symbol: {order_info['info']['symbol']}, type: {order_info['info']['order_type']}, side: {order_info['info']['side']}, amount: {order_info['info']['qty']}"
         logger.print_log(text=msg)
         return msg
 
@@ -196,6 +196,8 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
             real_leverage = position / (balance * ticker.last)
 
             # Record account and position information.
+            msg = f"Price: {ticker.last} USD"
+            logger.print_log(text=msg)
             msg = f"Position: {position} USD"
             logger.print_log(text=msg)
             msg = f"Balance: {balance} {base_currency}"
