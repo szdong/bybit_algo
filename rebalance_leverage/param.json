@@ -1,0 +1,8 @@
+{
+  "symbol": "BTC/USD",
+  "leverage": 3,
+  "target_price": 80000,
+  "order_unit": 10,
+  "sleep_time": 2,
+  "start_balance": 0.02100019
+}
