@@ -157,6 +157,10 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
 
     while True:
         try:
+            config_open = open(param_path, "r")
+            param_json = json.load(config_open)
+            param = Param(param=param_json)
+
             ticker = TickerInfo(ticker=bybit.fetch_ticker(symbol=param.symbol))
             balance = bybit.fetch_balance()["total"][base_currency]
             position = get_position(bybit_sdk=bybit_sdk, symbol=param.symbol)
