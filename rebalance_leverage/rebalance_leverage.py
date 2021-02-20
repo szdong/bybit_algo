@@ -174,6 +174,7 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
                 order_result = order.market_buy_order(symbol=param.symbol, amount=lot)
                 msg = order_info(order_info=order_result, logger=logger)
                 notify.line_notify(message=msg)
+                position += lot
             else:
                 # Close all positions when the target price is reached.
                 if ticker.last >= param.target_price:
@@ -197,9 +198,10 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
                     order_result = order.market_buy_order(symbol=param.symbol, amount=lot)
                     msg = order_info(order_info=order_result, logger=logger)
                     notify.line_notify(message=msg)
+                    position += lot
 
-            balance = bybit.fetch_balance()["total"][base_currency]
-            position = get_position(bybit_sdk=bybit_sdk, symbol=param.symbol)
+            # balance = bybit.fetch_balance()["total"][base_currency]
+            # position = get_position(bybit_sdk=bybit_sdk, symbol=param.symbol)
             real_leverage = position / (balance * ticker.last)
 
             # Record account and position information.
