@@ -156,6 +156,7 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
     cancel_all_order = bybit.cancel_all_orders(symbol=param.symbol)
     for info in cancel_all_order:
         msg = cancel_info(cancel_info=info, logger=logger)
+        msg = f"{param.symbol}\n" + msg
         notify.line_notify(msg)
 
     while True:
@@ -188,6 +189,7 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
                     msg = "Reached target price.\n"
                     msg += f"Balance: {balance} {base_currency}"
                     logger.print_log(text=msg)
+                    msg = f"{param.symbol}\n" + msg
                     notify.line_notify(message=msg)
                     exit(0)
 
@@ -197,6 +199,7 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
                     lot = param.order_unit
                     order_result = order.market_buy_order(symbol=param.symbol, amount=lot)
                     msg = order_info(order_info=order_result, logger=logger)
+                    msg = f"{param.symbol}\n" + msg
                     notify.line_notify(message=msg)
                     position += lot
 
@@ -212,6 +215,7 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
         except Exception as e:
             error_msg = f"Error: {e}\n{traceback.format_exc()}"
             logger.print_log(text=error_msg)
+            error_msg = f"{param.symbol}\n" + error_msg
             notify.line_notify(message=error_msg)
 
         time.sleep(param.sleep_time)
