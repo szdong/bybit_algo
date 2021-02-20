@@ -1,4 +1,5 @@
 import os
+import sys
 import ccxt
 import json
 import time
@@ -6,6 +7,8 @@ from datetime import datetime
 import requests
 import traceback
 import bybit as bybit_official
+
+args = sys.argv
 
 
 class Param:
@@ -219,6 +222,6 @@ if __name__ == '__main__':
     bybit.apiKey = api_info["api_key"]
     bybit.secret = api_info["api_secret"]
     line_notify_key = api_info["line_notify_key"]
-    param_path = "./param.json"
-    log_path = "./bot_log.txt"
+    param_path = args[1]
+    log_path = args[2]
     main(bybit=bybit, param_path=param_path, log_path=log_path, notify_key=line_notify_key)
