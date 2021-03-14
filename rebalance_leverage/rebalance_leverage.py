@@ -142,6 +142,10 @@ def get_position(bybit_sdk: bybit_official.bybit, symbol: str):
         return 0
 
 
+def get_roe(before: float, after: float):
+    return (after - before) / before
+
+
 def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
     config_open = open(param_path, "r")
     param_json = json.load(config_open)
@@ -209,7 +213,7 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
 
             # Record account and position information.
             msg = f"Price: {ticker.last} | " + f"Position: {position} USD | " + f"Balance: {balance} {base_currency} | " \
-                  + f"Effective Leverage: {round(real_leverage, 3)}x"
+                  + f"ROE: {round(get_roe(param.start_balance, balance) * 100, 3)}%" + f"Effective Leverage: {round(real_leverage, 3)}x"
             logger.print_log(text=msg)
 
         except Exception as e:
