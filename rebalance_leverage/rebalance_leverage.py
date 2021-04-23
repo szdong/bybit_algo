@@ -19,6 +19,7 @@ class Param:
         self.leverage = param["leverage"]
         self.target_price = param["target_price"]
         self.start_balance = param["start_balance"]
+        self.side = param["side"]
 
 
 class TickerInfo:
@@ -176,16 +177,27 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
             # If there has no position, make a long position of 'leverage' times your start balance.
             if position == 0:
                 lot = int(balance * ticker.last * param.leverage)
-                order_result = order.market_buy_order(symbol=param.symbol, amount=lot)
-                msg = order_info(order_info=order_result, logger=logger)
-                notify.line_notify(message=msg)
-                position += lot
+                if param.side in ["Long", "long", "L", "l", "Buy", "buy", "B", "b"]:
+                    buy_order_result = order.market_buy_order(symbol=param.symbol, amount=lot)
+                    msg = order_info(order_info=buy_order_result, logger=logger)
+                    notify.line_notify(message=msg)
+                    position += lot
+                elif param.side in ["Short", "short", "S", "s", "Sell", "sell"]:
+                    sell_order_result = order.market_sell_order(symbol=param.symbol, amount=lot)
+                    msg = order_info(order_info=sell_order_result, logger=logger)
+                    notify.line_notify(message=msg)
+                    position += lot
             else:
                 # Close all positions when the target price is reached.
                 if ticker.last >= param.target_price:
-                    order_result = order.market_sell_order(symbol=param.symbol, amount=position)
-                    msg = order_info(order_info=order_result, logger=logger)
-                    notify.line_notify(message=msg)
+                    if param.side in ["Long", "long", "L", "l", "Buy", "buy", "B", "b"]:
+                        sell_order_result = order.market_sell_order(symbol=param.symbol, amount=position)
+                        msg = order_info(order_info=sell_order_result, logger=logger)
+                        notify.line_notify(message=msg)
+                    elif param.side in ["Short", "short", "S", "s", "Sell", "sell"]:
+                        buy_order_result = order.market_buy_order(symbol=param.symbol, amount=position)
+                        msg = order_info(order_info=buy_order_result, logger=logger)
+                        notify.line_notify(message=msg)
 
                     time.sleep(5)
                     balance = bybit.fetch_balance()["total"][base_currency]
@@ -201,11 +213,18 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
                 # 'order_unit', the order for 'order_unit' will be placed.
                 if (position + param.order_unit) / (ticker.last * balance) <= param.leverage:
                     lot = param.order_unit
-                    order_result = order.market_buy_order(symbol=param.symbol, amount=lot)
-                    msg = order_info(order_info=order_result, logger=logger)
-                    msg = f"{param.symbol}\n" + msg
-                    notify.line_notify(message=msg)
-                    position += lot
+                    if param.side in ["Long", "long", "L", "l", "Buy", "buy", "B", "b"]:
+                        buy_order_result = order.market_buy_order(symbol=param.symbol, amount=lot)
+                        msg = order_info(order_info=buy_order_result, logger=logger)
+                        msg = f"{param.symbol}\n" + msg
+                        notify.line_notify(message=msg)
+                        position += lot
+                    elif param.side in ["Short", "short", "S", "s", "Sell", "sell"]:
+                        sell_order_result = order.market_sell_order(symbol=param.symbol, amount=lot)
+                        msg = order_info(order_info=sell_order_result, logger=logger)
+                        msg = f"{param.symbol}\n" + msg
+                        notify.line_notify(message=msg)
+                        position += lot
 
             # balance = bybit.fetch_balance()["total"][base_currency]
             # position = get_position(bybit_sdk=bybit_sdk, symbol=param.symbol)

@@ -1,5 +1,6 @@
 {
   "symbol": "BTC/USD",
+  "side": "Long",
   "leverage": 3,
   "target_price": 80000,
   "order_unit": 10,
