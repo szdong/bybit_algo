@@ -177,8 +177,7 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
 
             # If there has no position, make a long position of 'leverage' times your start balance.
             if position == 0:
-                if param.trigger_price not in [0, None] and " " not in param.trigger_price and type(
-                        param.trigger_price) != str:
+                if param.trigger_price not in [0, None] and type(param.trigger_price) != str:
                     lot = int(balance * ticker.last * param.leverage)
                     if param.side in ["Long", "long", "L", "l", "Buy", "buy", "B", "b"]:
                         if ticker.last <= param.trigger_price:
