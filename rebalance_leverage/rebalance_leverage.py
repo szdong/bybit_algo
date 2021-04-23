@@ -205,12 +205,14 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
                         position += lot
             else:
                 # Close all positions when the target price is reached.
-                if ticker.last >= param.target_price:
-                    if param.side in ["Long", "long", "L", "l", "Buy", "buy", "B", "b"]:
+                if param.side in ["Long", "long", "L", "l", "Buy", "buy", "B", "b"]:
+                    if ticker.last >= param.target_price:
                         sell_order_result = order.market_sell_order(symbol=param.symbol, amount=position)
                         msg = order_info(order_info=sell_order_result, logger=logger)
                         notify.line_notify(message=msg)
-                    elif param.side in ["Short", "short", "S", "s", "Sell", "sell"]:
+
+                elif param.side in ["Short", "short", "S", "s", "Sell", "sell"]:
+                    if ticker.last <= param.target_price:
                         buy_order_result = order.market_buy_order(symbol=param.symbol, amount=position)
                         msg = order_info(order_info=buy_order_result, logger=logger)
                         notify.line_notify(message=msg)
