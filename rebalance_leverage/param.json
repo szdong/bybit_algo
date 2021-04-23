@@ -1,9 +1,10 @@
 {
   "symbol": "BTC/USD",
-  "side": "Long",
-  "leverage": 3,
-  "target_price": 80000,
+  "side": "Short",
+  "trigger_price": 51000,
+  "leverage": 2,
+  "target_price": 40000,
   "order_unit": 10,
   "sleep_time": 2,
-  "start_balance": 0.02100019
+  "start_balance": 0.02902074
 }
