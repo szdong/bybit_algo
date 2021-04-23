@@ -211,25 +211,35 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
                         msg = order_info(order_info=sell_order_result, logger=logger)
                         notify.line_notify(message=msg)
 
+                        time.sleep(5)
+                        balance = bybit.fetch_balance()["total"][base_currency]
+
+                        msg = "Reached target price.\n"
+                        msg += f"Balance: {balance} {base_currency}"
+                        logger.print_log(text=msg)
+                        msg = f"{param.symbol}\n" + msg
+                        notify.line_notify(message=msg)
+                        exit(0)
+
                 elif param.side in ["Short", "short", "S", "s", "Sell", "sell"]:
                     if ticker.last <= param.target_price:
                         buy_order_result = order.market_buy_order(symbol=param.symbol, amount=position)
                         msg = order_info(order_info=buy_order_result, logger=logger)
                         notify.line_notify(message=msg)
 
-                    time.sleep(5)
-                    balance = bybit.fetch_balance()["total"][base_currency]
+                        time.sleep(5)
+                        balance = bybit.fetch_balance()["total"][base_currency]
 
-                    msg = "Reached target price.\n"
-                    msg += f"Balance: {balance} {base_currency}"
-                    logger.print_log(text=msg)
-                    msg = f"{param.symbol}\n" + msg
-                    notify.line_notify(message=msg)
-                    exit(0)
+                        msg = "Reached target price.\n"
+                        msg += f"Balance: {balance} {base_currency}"
+                        logger.print_log(text=msg)
+                        msg = f"{param.symbol}\n" + msg
+                        notify.line_notify(message=msg)
+                        exit(0)
 
                 # If the leverage ratio is less than the specified leverage ratio after placing an order for
                 # 'order_unit', the order for 'order_unit' will be placed.
-                if (position + param.order_unit) / (ticker.last * balance) <= param.leverage:
+                if abs((position + param.order_unit) / (ticker.last * balance)) <= param.leverage:
                     lot = param.order_unit
                     if param.side in ["Long", "long", "L", "l", "Buy", "buy", "B", "b"]:
                         buy_order_result = order.market_buy_order(symbol=param.symbol, amount=lot)
