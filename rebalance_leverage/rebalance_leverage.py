@@ -275,7 +275,8 @@ def main(bybit: ccxt.bybit, param_path: str, notify_key: str, log_path: str):
 
 
 if __name__ == '__main__':
-    config_open = open("./api_info.json", "r")
+    api_path = args[0]
+    config_open = open(api_path, "r")
     api_info = json.load(config_open)
     bybit = ccxt.bybit()
     bybit.apiKey = api_info["api_key"]
